@@ -4,6 +4,19 @@ import matplotlib.pyplot as plt
 def calcMA(prices, period):
     return np.mean(prices[-period:])
 
+def signal(prices, short_period = 10, long_period = 30):
+    sma = []
+    lma = []
+    for i in range(len(prices)):
+        if i - 1 >= short_period:
+            sma.append(calcMA(prices[:i + 1], short_period))
+        
+
+    
+
+    
+
+
 if __name__ == "__main__":
     prices = []
     base = 100
