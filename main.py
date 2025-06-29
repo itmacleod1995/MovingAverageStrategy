@@ -19,7 +19,7 @@ def signal(prices, short_period = 10, long_period = 30):
         else:
             lma.append(None)
         
-        curr_sma_crosses_lma = sma[i] > lma[i]
+        curr_sma_crosses_lma = sma[i] > lma[i] if sma[i] and lma[i] else False
 
         if curr_sma_crosses_lma and sma_higher == False:
             sma_higher = True
@@ -29,6 +29,12 @@ def signal(prices, short_period = 10, long_period = 30):
             states.append("Sell")
         else:
             states.append("Hold")
+    
+    plt.plot(sma, label="SMA")
+    plt.plot(lma, label="LMA")
+
+    plt.legend()
+    plt.show()
         
     return states
 
@@ -47,6 +53,8 @@ if __name__ == "__main__":
     plt.ylabel("Price")
     plt.title("Moving Average Strategy")
     plt.plot(prices, label="Price")
+
+    states = signal(prices)
 
     plt.legend()
 
