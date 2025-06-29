@@ -32,13 +32,7 @@ def signal(prices, short_period = 10, long_period = 30):
             states.append("Hold")
         
     return states
-        
-
     
-
-    
-
-
 if __name__ == "__main__":
     prices = []
     base = 100
