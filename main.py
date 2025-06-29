@@ -4,6 +4,41 @@ import matplotlib.pyplot as plt
 def calcMA(prices, period):
     return np.mean(prices[-period:])
 
+def signal(prices, short_period = 10, long_period = 30):
+    sma = []
+    lma = []
+    states = []
+    sma_higher = False
+    for i in range(len(prices)):
+        if i - 1 >= short_period:
+            sma.append(calcMA(prices[:i], short_period))
+        else:
+            sma.append(None)
+        if i - 1 >= long_period:
+            lma.append(calcMA(prices[:i], long_period))
+        else:
+            lma.append(None)
+        
+        curr_sma_crosses_lma = sma[i] > lma[i]
+
+        if curr_sma_crosses_lma and sma_higher == False:
+            curr_sma_crosses_lma = True
+            sma_higher = True
+            states.append("Buy")
+        elif curr_sma_crosses_lma == False and sma_higher:
+            sma_higher = False
+            states.append("Sell")
+        else:
+            states.append("Hold")
+        
+    return states
+        
+
+    
+
+    
+
+
 if __name__ == "__main__":
     prices = []
     base = 100
