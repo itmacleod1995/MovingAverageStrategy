@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def calcMA(prices, period):
-    return np.mean(prices[-period:])
+    return np.mean(prices[-period:]) 
 
 def signal(prices, short_period = 10, long_period = 30):
     sma = []
@@ -22,7 +22,6 @@ def signal(prices, short_period = 10, long_period = 30):
         curr_sma_crosses_lma = sma[i] > lma[i]
 
         if curr_sma_crosses_lma and sma_higher == False:
-            curr_sma_crosses_lma = True
             sma_higher = True
             states.append("Buy")
         elif curr_sma_crosses_lma == False and sma_higher:
@@ -32,7 +31,7 @@ def signal(prices, short_period = 10, long_period = 30):
             states.append("Hold")
         
     return states
-    
+
 if __name__ == "__main__":
     prices = []
     base = 100
