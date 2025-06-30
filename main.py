@@ -35,13 +35,13 @@ def signal(prices, short_period = 10, long_period = 30):
     
     for i in range(len(prices)):
         # Calculate Short Moving Average if we have enough data
-        if i - 1 >= short_period:
+        if i + 1 >= short_period:
             sma.append(calcMA(prices[:i + 1], short_period))
         else:
             sma.append(None)  # Not enough data yet
             
         # Calculate Long Moving Average if we have enough data
-        if i - 1 >= long_period:
+        if i + 1 >= long_period:
             lma.append(calcMA(prices[:i + 1], long_period))
         else:
             lma.append(None)  # Not enough data yet
@@ -59,15 +59,13 @@ def signal(prices, short_period = 10, long_period = 30):
             states.append("Sell")
         else:
             states.append("Hold")  # No crossover, maintain current position
-    
-    # Plot the moving averages
-    plt.plot(sma, label="SMA")
-    plt.plot(lma, label="LMA")
-
-    plt.legend()
-    plt.show()
         
     return states, sma, lma
+
+def backtest(prices, states):
+    print(states)
+
+
 
 if __name__ == "__main__":
     # Generate synthetic price data for testing
@@ -95,4 +93,6 @@ if __name__ == "__main__":
 
     plt.legend()
     plt.show()
+
+    backtest(prices, states)
     
