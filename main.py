@@ -35,13 +35,13 @@ def signal(prices, short_period = 10, long_period = 30):
     
     for i in range(len(prices)):
         # Calculate Short Moving Average if we have enough data
-        if i - 1 >= short_period:
+        if i + 1 >= short_period:
             sma.append(calcMA(prices[:i + 1], short_period))
         else:
             sma.append(None)  # Not enough data yet
             
         # Calculate Long Moving Average if we have enough data
-        if i - 1 >= long_period:
+        if i + 1 >= long_period:
             lma.append(calcMA(prices[:i + 1], long_period))
         else:
             lma.append(None)  # Not enough data yet
@@ -59,15 +59,39 @@ def signal(prices, short_period = 10, long_period = 30):
             states.append("Sell")
         else:
             states.append("Hold")  # No crossover, maintain current position
-    
-    # Plot the moving averages
-    plt.plot(sma, label="SMA")
-    plt.plot(lma, label="LMA")
-
-    plt.legend()
-    plt.show()
         
     return states, sma, lma
+
+def backtest(prices, states):
+    cash = 1000
+    position = 0 #0 = not in the market, 1 is in the market
+    portfolio = []
+    num_of_shares = 0
+    profit = 0
+    for i in range(len(prices)):
+        if states[i] == "Buy" and position == 0:
+            #Buy
+            position = 1
+            num_of_shares = cash / prices[i]
+            print("Buy at {}".format(prices[i]))
+            cash = 0
+        elif states[i] == "Sell" and position == 1:
+            #Sell
+            position = 0
+            print("Sell at {}".format(prices[i]))
+            cash = num_of_shares * prices[i]
+            num_of_shares = 0
+        
+        portfolio_val = cash + (num_of_shares * prices[i])
+        portfolio.append(portfolio_val)
+        print(portfolio)
+    
+    final_val = cash + (num_of_shares * prices[-1])
+    print("Total profit: {}".format(final_val - 1000))
+
+   
+
+
 
 if __name__ == "__main__":
     # Generate synthetic price data for testing
@@ -76,7 +100,7 @@ if __name__ == "__main__":
 
     # Create 100 data points with upward trend and random noise
     for i in range(100):
-        trend = i * .1  # Linear upward trend
+        trend = i * .02  # Linear upward trend
         noise = np.random.normal(0, 2)  # Random noise with mean=0, std=2
         price = base + trend + noise
         prices.append(price)
@@ -95,4 +119,6 @@ if __name__ == "__main__":
 
     plt.legend()
     plt.show()
+
+    backtest(prices, states)
     
