@@ -36,13 +36,13 @@ def signal(prices, short_period = 10, long_period = 30):
     for i in range(len(prices)):
         # Calculate Short Moving Average if we have enough data
         if i - 1 >= short_period:
-            sma.append(calcMA(prices[:i], short_period))
+            sma.append(calcMA(prices[:i + 1], short_period))
         else:
             sma.append(None)  # Not enough data yet
             
         # Calculate Long Moving Average if we have enough data
         if i - 1 >= long_period:
-            lma.append(calcMA(prices[:i], long_period))
+            lma.append(calcMA(prices[:i + 1], long_period))
         else:
             lma.append(None)  # Not enough data yet
         
@@ -67,7 +67,7 @@ def signal(prices, short_period = 10, long_period = 30):
     plt.legend()
     plt.show()
         
-    return states
+    return states, sma, lma
 
 if __name__ == "__main__":
     # Generate synthetic price data for testing
@@ -80,16 +80,18 @@ if __name__ == "__main__":
         noise = np.random.normal(0, 2)  # Random noise with mean=0, std=2
         price = base + trend + noise
         prices.append(price)
-    
+
+    # Generate trading signals using our strategy
+    states, sma, lma = signal(prices)
+
     # Set up the plot
     plt.figure(figsize=(12, 8))
     plt.xlabel("Time")
     plt.ylabel("Price")
     plt.title("Moving Average Strategy")
     plt.plot(prices, label="Price")
-
-    # Generate trading signals using our strategy
-    states = signal(prices)
+    plt.plot(sma, label="Small Moving Average")
+    plt.plot(lma, label="Large Moving Average")
 
     plt.legend()
     plt.show()
