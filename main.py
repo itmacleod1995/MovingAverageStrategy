@@ -84,6 +84,7 @@ def backtest(prices, states):
         
         portfolio_val = cash + (num_of_shares * prices[i])
         portfolio.append(portfolio_val)
+        print(portfolio)
     
     final_val = cash + (num_of_shares * prices[-1])
     print("Total profit: {}".format(final_val - 1000))
