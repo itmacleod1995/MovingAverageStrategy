@@ -63,7 +63,31 @@ def signal(prices, short_period = 10, long_period = 30):
     return states, sma, lma
 
 def backtest(prices, states):
-    print(states)
+    cash = 1000
+    position = 0 #0 = not in the market, 1 is in the market
+    portfolio = []
+    num_of_shares = 0
+    for i in range(len(prices)):
+        if states[i] == "Buy" and position == 0:
+            #Buy
+            position = 1
+            num_of_shares = cash / prices[i]
+            print("Buy at {}".format(prices[i]))
+            cash = 0
+        elif states[i] == "Sell" and position == 1:
+            #Sell
+            position = 0
+            print("Sell at {}".format(prices[i]))
+            cash = num_of_shares * prices[i]
+            profit = cash - 1000
+        
+        portfolio_val = cash + (num_of_shares * prices[i])
+        portfolio.append(portfolio_val)
+    
+    final_val = cash + (num_of_shares * prices[-1])
+    print("Total profit: {}".format(final_val - 1000))
+
+   
 
 
 
@@ -74,7 +98,7 @@ if __name__ == "__main__":
 
     # Create 100 data points with upward trend and random noise
     for i in range(100):
-        trend = i * .1  # Linear upward trend
+        trend = i * .02  # Linear upward trend
         noise = np.random.normal(0, 2)  # Random noise with mean=0, std=2
         price = base + trend + noise
         prices.append(price)
