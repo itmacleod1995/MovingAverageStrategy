@@ -116,6 +116,7 @@ if __name__ == "__main__":
     plt.plot(lma, label="Large Moving Average")
 
     plt.legend()
+    plt.grid()
     plt.show()
 
     backtest(prices, states)
