@@ -67,7 +67,6 @@ def backtest(prices, states):
     position = 0 #0 = not in the market, 1 is in the market
     portfolio = []
     num_of_shares = 0
-    profit = 0
     for i in range(len(prices)):
         if states[i] == "Buy" and position == 0:
             #Buy
@@ -84,7 +83,6 @@ def backtest(prices, states):
         
         portfolio_val = cash + (num_of_shares * prices[i])
         portfolio.append(portfolio_val)
-        print(portfolio)
     
     final_val = cash + (num_of_shares * prices[-1])
     print("Total profit: {}".format(final_val - 1000))
