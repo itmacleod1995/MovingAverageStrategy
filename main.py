@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas_datareader.data as pdr
+from pandas_datareader._utils import RemoteDataError
 import datetime as dt
 
 def calcMA(prices, period):
@@ -97,7 +98,11 @@ if __name__ == "__main__":
     
     start = dt.datetime(2022, 1, 1)
     end = dt.datetime(2022, 12, 31)
-    df = pdr.get_data_yahoo("TSLA", start, end)
+    try:
+        df = pdr.get_data_yahoo("AAPL", start, end)
+    except RemoteDataError as e:
+        print("Remote Data Error")
+
     
     prices = df['Close']
 
