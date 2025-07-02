@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas_datareader.data as pdr
+import datetime as dt
 
 def calcMA(prices, period):
     """
@@ -92,16 +94,12 @@ def backtest(prices, states):
 
 
 if __name__ == "__main__":
-    # Generate synthetic price data for testing
-    prices = []
-    base = 100  # Starting price
-
-    # Create 100 data points with upward trend and random noise
-    for i in range(100):
-        trend = i * .02  # Linear upward trend
-        noise = np.random.normal(0, 2)  # Random noise with mean=0, std=2
-        price = base + trend + noise
-        prices.append(price)
+    
+    start = dt.datetime(2022, 1, 1)
+    end = dt.datetime(2022, 12, 31)
+    df = pdr.get_data_yahoo("TSLA", start, end)
+    
+    prices = df['Close']
 
     # Generate trading signals using our strategy
     states, sma, lma = signal(prices)
