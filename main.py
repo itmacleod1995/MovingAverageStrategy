@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import pandas_datareader.data as pdr
 from pandas_datareader._utils import RemoteDataError
 import datetime as dt
+import yfinance as yf
 
 def calcMA(prices, period):
     """
@@ -96,15 +97,14 @@ def backtest(prices, states):
 
 if __name__ == "__main__":
     
-    start = dt.datetime(2022, 1, 1)
-    end = dt.datetime(2022, 12, 31)
-    try:
-        df = pdr.get_data_yahoo("AAPL", start, end)
-    except RemoteDataError as e:
-        print("Remote Data Error")
-
+    #start = dt.datetime(2020, 1, 1)
+    #end = dt.datetime(2020, 12, 31)
     
+    df = yf.download("AAPL")
+    print(df)
+
     prices = df['Close']
+    
 
     # Generate trading signals using our strategy
     states, sma, lma = signal(prices)
