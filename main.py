@@ -97,15 +97,14 @@ def backtest(prices, states):
 
 if __name__ == "__main__":
     
-    #start = dt.datetime(2020, 1, 1)
-    #end = dt.datetime(2020, 12, 31)
+    start = dt.datetime(2020, 1, 1)
+    end = dt.datetime(2020, 12, 31)
     
-    df = yf.download("MSFT")
-    print(df)
-
+    df = yf.download("SPY", start, end)
+    if df is None:
+        print("None!")
+    
     prices = df['Close']
-    
-
     # Generate trading signals using our strategy
     states, sma, lma = signal(prices)
 
