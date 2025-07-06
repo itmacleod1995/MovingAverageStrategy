@@ -100,7 +100,7 @@ if __name__ == "__main__":
     #start = dt.datetime(2020, 1, 1)
     #end = dt.datetime(2020, 12, 31)
     
-    df = yf.download("AAPL")
+    df = yf.download("MSFT")
     print(df)
 
     prices = df['Close']
