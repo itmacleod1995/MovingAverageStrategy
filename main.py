@@ -51,15 +51,20 @@ def signal(prices, short_period = 10, long_period = 30):
         else:
             lma.append(None)  # Not enough data yet
         
-        # Check if SMA is currently above LMA (with safety check for None values)
-        #curr_sma_crosses_lma = sma[i] > lma[i] if sma[i] and lma[i] else False
-
-        if (sma[i] and lma[i]) and (sma[i] > lma[i]):
-            if (sma[i - 1] and lma[i - 1]) and (sma[i - 1] <= lma[i - 1]):
+        # Only check for crossovers if i > 0 and all values are not None
+        if (
+            i > 0 and
+            sma[i] is not None and lma[i] is not None and
+            sma[i - 1] is not None and lma[i - 1] is not None
+        ):
+            # Check for a bullish crossover: previous SMA was below or equal to LMA, now it's above
+            if sma[i] > lma[i] and sma[i - 1] <= lma[i - 1]:
                 print("Small Moving Average = {}, Long Moving Average = {}".format(sma[i], lma[i]))
-                curr_sma_crosses_lma = True
+                curr_sma_crosses_lma = True  # Mark that a crossover just occurred
+            else:
+                curr_sma_crosses_lma = False  # No crossover or not enough data
         else:
-            curr_sma_crosses_lma = False
+            curr_sma_crosses_lma = False  # Not enough data for crossover check
 
         # Detect bullish crossover: SMA crosses above LMA
         if curr_sma_crosses_lma and sma_higher == False:
