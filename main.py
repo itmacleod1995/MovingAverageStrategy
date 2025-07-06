@@ -36,6 +36,7 @@ def signal(prices, short_period = 10, long_period = 30):
     lma = []  # Long Moving Average values
     states = []  # Trading signals
     sma_higher = False  # Track if SMA was above LMA in previous period
+    curr_sma_crosses_lma = False
     
     for i in range(len(prices)):
         # Calculate Short Moving Average if we have enough data
@@ -51,7 +52,14 @@ def signal(prices, short_period = 10, long_period = 30):
             lma.append(None)  # Not enough data yet
         
         # Check if SMA is currently above LMA (with safety check for None values)
-        curr_sma_crosses_lma = sma[i] > lma[i] if sma[i] and lma[i] else False
+        #curr_sma_crosses_lma = sma[i] > lma[i] if sma[i] and lma[i] else False
+
+        if (sma[i] and lma[i]) and (sma[i] > lma[i]):
+            if (sma[i - 1] and lma[i - 1]) and (sma[i - 1] <= lma[i - 1]):
+                print("Small Moving Average = {}, Long Moving Average = {}".format(sma[i], lma[i]))
+                curr_sma_crosses_lma = True
+        else:
+            curr_sma_crosses_lma = False
 
         # Detect bullish crossover: SMA crosses above LMA
         if curr_sma_crosses_lma and sma_higher == False:
@@ -103,7 +111,7 @@ if __name__ == "__main__":
     df = yf.download("SPY", start, end)
     if df is None:
         print("None!")
-    
+
     prices = df['Close']['SPY'].tolist()
 
     # Generate trading signals using our strategy
@@ -120,7 +128,8 @@ if __name__ == "__main__":
 
     plt.legend()
     plt.grid()
-    plt.show()
 
     backtest(prices, states)
+
+    plt.show()
     
