@@ -104,7 +104,8 @@ if __name__ == "__main__":
     if df is None:
         print("None!")
     
-    prices = df['Close']
+    prices = df['Close']['SPY'].tolist()
+
     # Generate trading signals using our strategy
     states, sma, lma = signal(prices)
 
