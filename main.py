@@ -4,6 +4,7 @@ import pandas_datareader.data as pdr
 from pandas_datareader._utils import RemoteDataError
 import datetime as dt
 import yfinance as yf
+import pandas as pd
 
 def calcMA(prices, period):
     """
@@ -18,7 +19,7 @@ def calcMA(prices, period):
     """
     return np.mean(prices[-period:]) 
 
-def signal(prices, short_period = 3, long_period = 6):
+def signal(prices, short_period = 10, long_period = 30):
     """
     Generate trading signals based on moving average crossover strategy.
     
@@ -126,11 +127,20 @@ if __name__ == "__main__":
 
     prices = []
     base = 10
-    for i in range(10):
+    for i in range(100):
         trend = i * .01
         noise = np.random.normal(0, 2)
         price = base + trend + noise
         prices.append(price)
+    
+    data = {
+        'prices': prices
+    }
+
+    df = pd.DataFrame(data)
+    df['SMA'] = df['prices'].rolling(10).mean()
+    df['LMA'] = df['prices'].rolling(30).mean()
+    print(df.head(30))
 
 
     # Generate trading signals using our strategy
