@@ -113,11 +113,22 @@ if __name__ == "__main__":
     start = dt.datetime(2020, 1, 1)
     end = dt.datetime(2020, 12, 31)
     
+    """
     df = yf.download("SPY", start, end)
     if df is None:
         print("None!")
 
     prices = df['Close']['SPY'].tolist()
+    """
+
+    prices = []
+    base = 100
+    for i in range(80):
+        trend = i * .01
+        noise = np.random.normal(0, 2)
+        price = base + trend + noise
+        prices.append(price)
+
 
     # Generate trading signals using our strategy
     states, sma, lma = signal(prices)
