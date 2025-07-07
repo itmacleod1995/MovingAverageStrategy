@@ -18,7 +18,7 @@ def calcMA(prices, period):
     """
     return np.mean(prices[-period:]) 
 
-def signal(prices, short_period = 10, long_period = 30):
+def signal(prices, short_period = 5, long_period = 10):
     """
     Generate trading signals based on moving average crossover strategy.
     
@@ -59,8 +59,11 @@ def signal(prices, short_period = 10, long_period = 30):
         ):
             # Check for a bullish crossover: previous SMA was below or equal to LMA, now it's above
             if sma[i] > lma[i] and sma[i - 1] <= lma[i - 1]:
-                print("Small Moving Average = {}, Long Moving Average = {}".format(sma[i], lma[i]))
+                print("Small > Long: Small Moving Average = {}, Long Moving Average = {}".format(sma[i], lma[i]))
                 curr_sma_crosses_lma = True  # Mark that a crossover just occurred
+            elif sma[i] < lma[i] and sma[i - 1] > lma[i - 1]:
+                print("Small < Long: Small Moving Average = {}, Long Moving Average = {}".format(sma[i], lma[i]))
+                curr_sma_crosses_lma = True
             else:
                 curr_sma_crosses_lma = False  # No crossover or not enough data
         else:
@@ -122,7 +125,7 @@ if __name__ == "__main__":
     """
 
     prices = []
-    base = 100
+    base = 30
     for i in range(80):
         trend = i * .01
         noise = np.random.normal(0, 2)
