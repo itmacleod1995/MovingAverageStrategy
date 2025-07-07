@@ -18,7 +18,7 @@ def calcMA(prices, period):
     """
     return np.mean(prices[-period:]) 
 
-def signal(prices, short_period = 5, long_period = 10):
+def signal(prices, short_period = 3, long_period = 6):
     """
     Generate trading signals based on moving average crossover strategy.
     
@@ -125,8 +125,8 @@ if __name__ == "__main__":
     """
 
     prices = []
-    base = 30
-    for i in range(80):
+    base = 10
+    for i in range(10):
         trend = i * .01
         noise = np.random.normal(0, 2)
         price = base + trend + noise
