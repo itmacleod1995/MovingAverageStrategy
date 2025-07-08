@@ -19,7 +19,7 @@ def calcMA(prices, period):
     """
     return np.mean(prices[-period:]) 
 
-def signal(prices, short_period = 10, long_period = 30):
+def signal(prices, sma, lma):
     """
     Generate trading signals based on moving average crossover strategy.
     
@@ -33,25 +33,11 @@ def signal(prices, short_period = 10, long_period = 30):
     Returns:
         list: Trading signals - "Buy", "Sell", or "Hold"
     """
-    sma = []  # Short Moving Average values
-    lma = []  # Long Moving Average values
     states = []  # Trading signals
     sma_higher = False  # Track if SMA was above LMA in previous period
-    curr_sma_crosses_lma = False
+    sma_crosses_lma = False
     
-    for i in range(len(prices)):
-        # Calculate Short Moving Average if we have enough data
-        if i + 1 >= short_period:
-            sma.append(calcMA(prices[:i + 1], short_period))
-        else:
-            sma.append(None)  # Not enough data yet
-            
-        # Calculate Long Moving Average if we have enough data
-        if i + 1 >= long_period:
-            lma.append(calcMA(prices[:i + 1], long_period))
-        else:
-            lma.append(None)  # Not enough data yet
-        
+    for i in range(len(prices)):    
         # Only check for crossovers if i > 0 and all values are not None
         if (
             i > 0 and
@@ -59,29 +45,29 @@ def signal(prices, short_period = 10, long_period = 30):
             sma[i - 1] is not None and lma[i - 1] is not None
         ):
             # Check for a bullish crossover: previous SMA was below or equal to LMA, now it's above
-            if sma[i] > lma[i] and sma[i - 1] <= lma[i - 1]:
-                print("Small > Long: Small Moving Average = {}, Long Moving Average = {}".format(sma[i], lma[i]))
-                curr_sma_crosses_lma = True  # Mark that a crossover just occurred
-            elif sma[i] < lma[i] and sma[i - 1] > lma[i - 1]:
-                print("Small < Long: Small Moving Average = {}, Long Moving Average = {}".format(sma[i], lma[i]))
-                curr_sma_crosses_lma = True
+            if sma[i] > lma[i] and sma[i - 1] <= lma[i - 1] and sma_higher == False:
+                print("SMA crosses above LMA: SMA = {}, LMA = {}".format(sma[i], lma[i]))
+                sma_crosses_lma = True  # Mark that a crossover just occurred
+                sma_higher = True
+            elif sma[i] < lma[i] and sma[i - 1] >= lma[i - 1] and sma_higher:
+                print("SMA crosses below LMA: SMA = {}, LMA = {}".format(sma[i], lma[i]))
+                sma_crosses_lma = True
+                sma_higher = False
             else:
-                curr_sma_crosses_lma = False  # No crossover or not enough data
+                sma_crosses_lma = False  # No crossover or not enough data
         else:
-            curr_sma_crosses_lma = False  # Not enough data for crossover check
+            sma_crosses_lma = False  # Not enough data for crossover check
 
         # Detect bullish crossover: SMA crosses above LMA
-        if curr_sma_crosses_lma and sma_higher == False:
-            sma_higher = True
+        if sma_crosses_lma and sma_higher:
             states.append("Buy")
         # Detect bearish crossover: SMA crosses below LMA
-        elif curr_sma_crosses_lma == False and sma_higher:
-            sma_higher = False
+        elif sma_crosses_lma and sma_higher == False:
             states.append("Sell")
         else:
             states.append("Hold")  # No crossover, maintain current position
         
-    return states, sma, lma
+    return states
 
 def backtest(prices, states):
     cash = 1000
@@ -117,48 +103,31 @@ if __name__ == "__main__":
     start = dt.datetime(2020, 1, 1)
     end = dt.datetime(2020, 12, 31)
     
-    """
     df = yf.download("SPY", start, end)
     if df is None:
         print("None!")
+        exit()
 
-    prices = df['Close']['SPY'].tolist()
-    """
-
-    prices = []
-    base = 10
-    for i in range(100):
-        trend = i * .01
-        noise = np.random.normal(0, 2)
-        price = base + trend + noise
-        prices.append(price)
+    df['SMA'] = df['Close'].rolling(10).mean()
+    df['LMA'] = df['Close'].rolling(30).mean()
     
-    data = {
-        'prices': prices
-    }
-
-    df = pd.DataFrame(data)
-    df['SMA'] = df['prices'].rolling(10).mean()
-    df['LMA'] = df['prices'].rolling(30).mean()
-    print(df.head(30))
-
-
+    #print(type(df['Close'].values))
     # Generate trading signals using our strategy
-    states, sma, lma = signal(prices)
+    states = signal(df['Close'], df['SMA'], df['LMA'])
 
     # Set up the plot
     plt.figure(figsize=(12, 8))
     plt.xlabel("Time")
     plt.ylabel("Price")
     plt.title("Moving Average Strategy")
-    plt.plot(prices, label="Price")
-    plt.plot(sma, label="Small Moving Average")
-    plt.plot(lma, label="Large Moving Average")
+    plt.plot(df['SMA'], label="SMA")
+    plt.plot(df['LMA'], label="LMA")
+    plt.plot(df['Close'], label="Closing Price")
 
     plt.legend()
     plt.grid()
 
-    backtest(prices, states)
+    backtest(df['Close'].values, states)
 
     plt.show()
     
