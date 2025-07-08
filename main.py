@@ -33,11 +33,9 @@ def signal(prices, sma, lma):
     Returns:
         list: Trading signals - "Buy", "Sell", or "Hold"
     """
-    sma = []  # Short Moving Average values
-    lma = []  # Long Moving Average values
     states = []  # Trading signals
     sma_higher = False  # Track if SMA was above LMA in previous period
-    curr_sma_crosses_lma = False
+    sma_crosses_lma = False
     
     for i in range(len(prices)):    
         # Only check for crossovers if i > 0 and all values are not None
@@ -47,24 +45,24 @@ def signal(prices, sma, lma):
             sma[i - 1] is not None and lma[i - 1] is not None
         ):
             # Check for a bullish crossover: previous SMA was below or equal to LMA, now it's above
-            if sma[i] > lma[i] and sma[i - 1] <= lma[i - 1]:
-                print("Small > Long: Small Moving Average = {}, Long Moving Average = {}".format(sma[i], lma[i]))
-                curr_sma_crosses_lma = True  # Mark that a crossover just occurred
+            if sma[i] > lma[i] and sma[i - 1] <= lma[i - 1] and sma_higher == False:
+                print("SMA crosses above LMA: SMA = {}, LMA = {}".format(sma[i], lma[i]))
+                sma_crosses_lma = True  # Mark that a crossover just occurred
                 sma_higher = True
-            elif sma[i] < lma[i] and sma[i - 1] > lma[i - 1]:
-                print("Small < Long: Small Moving Average = {}, Long Moving Average = {}".format(sma[i], lma[i]))
-                curr_sma_crosses_lma = True
+            elif sma[i] < lma[i] and sma[i - 1] >= lma[i - 1] and sma_higher:
+                print("SMA crosses below LMA: SMA = {}, LMA = {}".format(sma[i], lma[i]))
+                sma_crosses_lma = True
                 sma_higher = False
             else:
-                curr_sma_crosses_lma = False  # No crossover or not enough data
+                sma_crosses_lma = False  # No crossover or not enough data
         else:
-            curr_sma_crosses_lma = False  # Not enough data for crossover check
+            sma_crosses_lma = False  # Not enough data for crossover check
 
         # Detect bullish crossover: SMA crosses above LMA
-        if curr_sma_crosses_lma and sma_higher:
+        if sma_crosses_lma and sma_higher:
             states.append("Buy")
         # Detect bearish crossover: SMA crosses below LMA
-        elif curr_sma_crosses_lma and sma_higher == False:
+        elif sma_crosses_lma and sma_higher == False:
             states.append("Sell")
         else:
             states.append("Hold")  # No crossover, maintain current position
@@ -110,15 +108,10 @@ if __name__ == "__main__":
         print("None!")
         exit()
 
-    #prices = df['Close']['SPY'].tolist()
- 
-
     df['SMA'] = df['Close'].rolling(10).mean()
     df['LMA'] = df['Close'].rolling(30).mean()
-    print(df.head(30))
-    print(df.tail(30))
-
-
+    
+    #print(type(df['Close'].values))
     # Generate trading signals using our strategy
     states = signal(df['Close'], df['SMA'], df['LMA'])
 
@@ -129,11 +122,12 @@ if __name__ == "__main__":
     plt.title("Moving Average Strategy")
     plt.plot(df['SMA'], label="SMA")
     plt.plot(df['LMA'], label="LMA")
+    plt.plot(df['Close'], label="Closing Price")
 
     plt.legend()
     plt.grid()
 
-    #backtest(prices, states)
+    backtest(df['Close'].values, states)
 
     plt.show()
     
