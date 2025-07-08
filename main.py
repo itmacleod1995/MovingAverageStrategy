@@ -117,48 +117,35 @@ if __name__ == "__main__":
     start = dt.datetime(2020, 1, 1)
     end = dt.datetime(2020, 12, 31)
     
-    """
     df = yf.download("SPY", start, end)
     if df is None:
         print("None!")
+        exit()
 
-    prices = df['Close']['SPY'].tolist()
-    """
+    #prices = df['Close']['SPY'].tolist()
+ 
 
-    prices = []
-    base = 10
-    for i in range(100):
-        trend = i * .01
-        noise = np.random.normal(0, 2)
-        price = base + trend + noise
-        prices.append(price)
-    
-    data = {
-        'prices': prices
-    }
-
-    df = pd.DataFrame(data)
-    df['SMA'] = df['prices'].rolling(10).mean()
-    df['LMA'] = df['prices'].rolling(30).mean()
+    df['SMA'] = df['Close'].rolling(10).mean()
+    df['LMA'] = df['Close'].rolling(30).mean()
     print(df.head(30))
+    print(df.tail(30))
 
 
     # Generate trading signals using our strategy
-    states, sma, lma = signal(prices)
+    #states, sma, lma = signal(prices)
 
     # Set up the plot
     plt.figure(figsize=(12, 8))
     plt.xlabel("Time")
     plt.ylabel("Price")
     plt.title("Moving Average Strategy")
-    plt.plot(prices, label="Price")
-    plt.plot(sma, label="Small Moving Average")
-    plt.plot(lma, label="Large Moving Average")
+    plt.plot(df['SMA'], label="SMA")
+    plt.plot(df['LMA'], label="LMA")
 
     plt.legend()
     plt.grid()
 
-    backtest(prices, states)
+    #backtest(prices, states)
 
     plt.show()
     
