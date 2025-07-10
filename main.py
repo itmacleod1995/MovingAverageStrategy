@@ -6,19 +6,6 @@ import datetime as dt
 import yfinance as yf
 import pandas as pd
 
-def calcMA(prices, period):
-    """
-    Calculate the moving average for a given period.
-    
-    Args:
-        prices (list): List of price values
-        period (int): Number of periods for the moving average
-    
-    Returns:
-        float: The average of the last 'period' prices
-    """
-    return np.mean(prices[-period:]) 
-
 def signal(prices, sma, lma):
     """
     Generate trading signals based on moving average crossover strategy.
