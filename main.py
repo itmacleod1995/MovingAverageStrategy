@@ -83,7 +83,19 @@ def backtest(prices, states):
     return portfolio, total
 
 def plot_moving_averages(sma, lma, price):
-    pass
+    # Set up the plot
+    plt.figure(figsize=(12, 8))
+    plt.xlabel("Time")
+    plt.ylabel("Price")
+    plt.plot(sma, label="SMA")
+    plt.plot(lma, label="LMA")
+    plt.plot(price, label="Closing Price")
+
+    plt.title("Moving Average Strategy")
+    plt.legend()
+    plt.grid()
+
+    plt.show()
 
 def plot_portfolio(portfolio):
     plt.figure(figsize=(12,8))
@@ -114,22 +126,9 @@ if __name__ == "__main__":
     # Generate trading signals using our strategy
     states = signal(df['Close'], df['SMA'], df['LMA'])
 
-    # Set up the plot
-    plt.figure(figsize=(12, 8))
-    plt.xlabel("Time")
-    plt.ylabel("Price")
-    plt.title("Moving Average Strategy")
-    plt.plot(df['SMA'], label="SMA")
-    plt.plot(df['LMA'], label="LMA")
-    plt.plot(df['Close'], label="Closing Price")
-
     portfolio_val, total = backtest(df['Close'].values, states)
     df['Portfolio Value'] = portfolio_val
 
-    plt.legend()
-    plt.grid()
-
-    plt.show()
-
+    plot_moving_averages(df['SMA'], df['LMA'], df['Close'])
     plot_portfolio(df['Portfolio Value'])
     
