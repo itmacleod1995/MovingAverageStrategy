@@ -6,19 +6,6 @@ import datetime as dt
 import yfinance as yf
 import pandas as pd
 
-def calcMA(prices, period):
-    """
-    Calculate the moving average for a given period.
-    
-    Args:
-        prices (list): List of price values
-        period (int): Number of periods for the moving average
-    
-    Returns:
-        float: The average of the last 'period' prices
-    """
-    return np.mean(prices[-period:]) 
-
 def signal(prices, sma, lma):
     """
     Generate trading signals based on moving average crossover strategy.
@@ -91,12 +78,36 @@ def backtest(prices, states):
         portfolio_val = cash + (num_of_shares * prices[i])
         portfolio.append(portfolio_val)
     
-    final_val = cash + (num_of_shares * prices[-1])
-    print("Total profit: {}".format(final_val - 1000))
+    total = cash + (num_of_shares * prices[-1])
 
-   
+    return portfolio, total
 
+def plot_moving_averages(sma, lma, price):
+    # Set up the plot
+    plt.figure(figsize=(12, 8))
+    plt.xlabel("Time")
+    plt.ylabel("Price")
+    plt.plot(sma, label="SMA")
+    plt.plot(lma, label="LMA")
+    plt.plot(price, label="Closing Price")
 
+    plt.title("Moving Average Strategy")
+    plt.legend()
+    plt.grid()
+
+    plt.show()
+
+def plot_portfolio(portfolio):
+    plt.figure(figsize=(12,8))
+    plt.xlabel("Date")
+    plt.ylabel("Portfolio Value")
+    plt.plot(portfolio, label="Portfolio Value")
+
+    plt.title("Portfolio Value Over Time")
+    plt.legend()
+    plt.grid()
+
+    plt.show()
 
 if __name__ == "__main__":
     
@@ -108,26 +119,16 @@ if __name__ == "__main__":
         print("None!")
         exit()
 
+    #Calculate SMA and LMA
     df['SMA'] = df['Close'].rolling(10).mean()
     df['LMA'] = df['Close'].rolling(30).mean()
     
-    #print(type(df['Close'].values))
     # Generate trading signals using our strategy
     states = signal(df['Close'], df['SMA'], df['LMA'])
 
-    # Set up the plot
-    plt.figure(figsize=(12, 8))
-    plt.xlabel("Time")
-    plt.ylabel("Price")
-    plt.title("Moving Average Strategy")
-    plt.plot(df['SMA'], label="SMA")
-    plt.plot(df['LMA'], label="LMA")
-    plt.plot(df['Close'], label="Closing Price")
+    portfolio_val, total = backtest(df['Close'].values, states)
+    df['Portfolio Value'] = portfolio_val
 
-    plt.legend()
-    plt.grid()
-
-    backtest(df['Close'].values, states)
-
-    plt.show()
+    plot_moving_averages(df['SMA'], df['LMA'], df['Close'])
+    plot_portfolio(df['Portfolio Value'])
     
