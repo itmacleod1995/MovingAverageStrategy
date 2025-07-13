@@ -6,6 +6,7 @@ from pandas_datareader._utils import RemoteDataError
 import datetime as dt
 import yfinance as yf
 import pandas as pd
+from data import load_data
 
 # Function to generate trading signals based on moving average crossovers
 def signal(prices, sma, lma):
@@ -114,24 +115,23 @@ def plot_portfolio(portfolio):
     plt.show()
 
 if __name__ == "__main__":
-    
-    start = dt.datetime(2020, 1, 1)
+
+    start = dt.datetime(2018, 1, 1)
     end = dt.datetime(2020, 12, 31)
     
-    df = yf.download("SPY", start, end)  # Download historical SPY data
-    if df is None:
-        print("None!")
-        exit()
+    df = load_data(start, end)
 
     # Calculate short and long moving averages
     df['SMA'] = df['Close'].rolling(10).mean()
     df['LMA'] = df['Close'].rolling(30).mean()
+
+    prices = df['Close']['SPY'].to_numpy()
     
     # Generate trading signals using our strategy
-    states = signal(df['Close'], df['SMA'], df['LMA'])
+    states = signal(prices, df['SMA'], df['LMA'])
 
     # Run backtest to simulate trading and get portfolio values
-    portfolio_val, total = backtest(df['Close'].values, states)
+    portfolio_val, total = backtest(prices, states)
     df['Portfolio Value'] = portfolio_val
 
     # Plot moving averages and closing price
