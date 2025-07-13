@@ -1,3 +1,4 @@
+# Import necessary libraries
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas_datareader.data as pdr
@@ -6,25 +7,23 @@ import datetime as dt
 import yfinance as yf
 import pandas as pd
 
+# Function to generate trading signals based on moving average crossovers
 def signal(prices, sma, lma):
     """
     Generate trading signals based on moving average crossover strategy.
-    
     Strategy: Buy when Short MA crosses above Long MA, Sell when it crosses below.
-    
     Args:
         prices (list): List of price values
         short_period (int): Period for Short Moving Average (default: 10)
         long_period (int): Period for Long Moving Average (default: 30)
-    
     Returns:
         list: Trading signals - "Buy", "Sell", or "Hold"
     """
-    states = []  # Trading signals
+    states = []  # List to store trading signals
     sma_higher = False  # Track if SMA was above LMA in previous period
-    sma_crosses_lma = False
+    sma_crosses_lma = False  # Track if a crossover just occurred
     
-    for i in range(len(prices)):    
+    for i in range(len(prices)):
         # Only check for crossovers if i > 0 and all values are not None
         if (
             i > 0 and
@@ -36,6 +35,7 @@ def signal(prices, sma, lma):
                 print("SMA crosses above LMA: SMA = {}, LMA = {}".format(sma[i], lma[i]))
                 sma_crosses_lma = True  # Mark that a crossover just occurred
                 sma_higher = True
+            # Check for a bearish crossover: previous SMA was above or equal to LMA, now it's below
             elif sma[i] < lma[i] and sma[i - 1] >= lma[i - 1] and sma_higher:
                 print("SMA crosses below LMA: SMA = {}, LMA = {}".format(sma[i], lma[i]))
                 sma_crosses_lma = True
@@ -56,32 +56,35 @@ def signal(prices, sma, lma):
         
     return states
 
+# Function to backtest the strategy and simulate trading
 def backtest(prices, states):
-    cash = 1000
-    position = 0 #0 = not in the market, 1 is in the market
-    portfolio = []
-    num_of_shares = 0
+    cash = 1000  # Starting cash
+    position = 0 # 0 = not in the market, 1 = in the market
+    portfolio = []  # Track portfolio value over time
+    num_of_shares = 0  # Number of shares held
     for i in range(len(prices)):
         if states[i] == "Buy" and position == 0:
-            #Buy
+            # Buy if signal is Buy and not already in the market
             position = 1
             num_of_shares = cash / prices[i]
             print("Buy at {}".format(prices[i]))
             cash = 0
         elif states[i] == "Sell" and position == 1:
-            #Sell
+            # Sell if signal is Sell and currently in the market
             position = 0
             print("Sell at {}".format(prices[i]))
             cash = num_of_shares * prices[i]
             num_of_shares = 0
         
+        # Calculate current portfolio value (cash + value of held shares)
         portfolio_val = cash + (num_of_shares * prices[i])
         portfolio.append(portfolio_val)
     
-    total = cash + (num_of_shares * prices[-1])
+    total = cash + (num_of_shares * prices[-1])  # Final portfolio value
 
     return portfolio, total
 
+# Function to plot moving averages and closing price
 def plot_moving_averages(sma, lma, price):
     # Set up the plot
     plt.figure(figsize=(12, 8))
@@ -97,6 +100,7 @@ def plot_moving_averages(sma, lma, price):
 
     plt.show()
 
+# Function to plot portfolio value over time
 def plot_portfolio(portfolio):
     plt.figure(figsize=(12,8))
     plt.xlabel("Date")
@@ -114,22 +118,24 @@ if __name__ == "__main__":
     start = dt.datetime(2020, 1, 1)
     end = dt.datetime(2020, 12, 31)
     
-    df = yf.download("SPY", start, end)
+    df = yf.download("SPY", start, end)  # Download historical SPY data
     if df is None:
         print("None!")
         exit()
 
-    #Calculate SMA and LMA
+    # Calculate short and long moving averages
     df['SMA'] = df['Close'].rolling(10).mean()
     df['LMA'] = df['Close'].rolling(30).mean()
     
     # Generate trading signals using our strategy
     states = signal(df['Close'], df['SMA'], df['LMA'])
-    prices = df['Close']['SPY'].to_numpy()
-    portfolio_val, total = backtest(prices, states)
+
+    # Run backtest to simulate trading and get portfolio values
+    portfolio_val, total = backtest(df['Close'].values, states)
     df['Portfolio Value'] = portfolio_val
 
+    # Plot moving averages and closing price
     plot_moving_averages(df['SMA'], df['LMA'], df['Close'])
+    # Plot portfolio value over time
     plot_portfolio(df['Portfolio Value'])
-    #print("total value = {}".format(total))
     
