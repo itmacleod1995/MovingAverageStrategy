@@ -125,10 +125,11 @@ if __name__ == "__main__":
     
     # Generate trading signals using our strategy
     states = signal(df['Close'], df['SMA'], df['LMA'])
-
-    portfolio_val, total = backtest(df['Close'].values, states)
+    prices = df['Close']['SPY'].to_numpy()
+    portfolio_val, total = backtest(prices, states)
     df['Portfolio Value'] = portfolio_val
 
     plot_moving_averages(df['SMA'], df['LMA'], df['Close'])
     plot_portfolio(df['Portfolio Value'])
+    #print("total value = {}".format(total))
     
