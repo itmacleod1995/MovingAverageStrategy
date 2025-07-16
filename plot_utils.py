@@ -1,5 +1,7 @@
 #import dependencies
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 
 # Function to plot moving averages and closing price
 def plot_moving_averages(sma, lma, price):
@@ -29,3 +31,7 @@ def plot_portfolio(portfolio):
     plt.grid()
 
     plt.show()
+
+def plot_signals():
+    pass
+
