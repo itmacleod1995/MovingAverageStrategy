@@ -8,63 +8,8 @@ import yfinance as yf
 import pandas as pd
 from data import load_data
 from strategy import signal
-
-# Function to backtest the strategy and simulate trading
-def backtest(prices, states):
-    cash = 1000  # Starting cash
-    position = 0 # 0 = not in the market, 1 = in the market
-    portfolio = []  # Track portfolio value over time
-    num_of_shares = 0  # Number of shares held
-    for i in range(len(prices)):
-        if states[i] == "Buy" and position == 0:
-            # Buy if signal is Buy and not already in the market
-            position = 1
-            num_of_shares = cash / prices[i]
-            print("Buy at {}".format(prices[i]))
-            cash = 0
-        elif states[i] == "Sell" and position == 1:
-            # Sell if signal is Sell and currently in the market
-            position = 0
-            print("Sell at {}".format(prices[i]))
-            cash = num_of_shares * prices[i]
-            num_of_shares = 0
-        
-        # Calculate current portfolio value (cash + value of held shares)
-        portfolio_val = cash + (num_of_shares * prices[i])
-        portfolio.append(portfolio_val)
-    
-    total = cash + (num_of_shares * prices[-1])  # Final portfolio value
-
-    return portfolio, total
-
-# Function to plot moving averages and closing price
-def plot_moving_averages(sma, lma, price):
-    # Set up the plot
-    plt.figure(figsize=(12, 8))
-    plt.xlabel("Time")
-    plt.ylabel("Price")
-    plt.plot(sma, label="SMA")
-    plt.plot(lma, label="LMA")
-    plt.plot(price, label="Closing Price")
-
-    plt.title("Moving Average Strategy")
-    plt.legend()
-    plt.grid()
-
-    plt.show()
-
-# Function to plot portfolio value over time
-def plot_portfolio(portfolio):
-    plt.figure(figsize=(12,8))
-    plt.xlabel("Date")
-    plt.ylabel("Portfolio Value")
-    plt.plot(portfolio, label="Portfolio Value")
-
-    plt.title("Portfolio Value Over Time")
-    plt.legend()
-    plt.grid()
-
-    plt.show()
+from backtest import backtest
+from plot_utils import plot_moving_averages, plot_portfolio
 
 if __name__ == "__main__":
 
