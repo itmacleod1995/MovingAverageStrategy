@@ -33,12 +33,25 @@ if __name__ == "__main__":
     portfolio_val, total = backtest(prices, states)
     df['Portfolio Value'] = portfolio_val
 
-    # Plot moving averages and closing price
-    plot_moving_averages(df['SMA'], df['LMA'], df['Close'])
-    # Plot portfolio value over time
-    plot_portfolio(df['Portfolio Value'])
+    buySignals = df[df.Position == "Buy"]
 
-    plot_signals(df)
+
+    """"Plot"""
+    plt.figure(figsize=(15, 10))
+    plt.xlabel("Time")
+    plt.ylabel("Price")
+    plt.plot(df['SMA'], label="SMA", color="Orange")
+    plt.plot(df['LMA'], label="LMA", color="Purple")
+    plt.plot(df['Close'], label="Price", color="LightBlue")
+
+    plt.title("Moving Average Crossover Strategy")
+
+    plt.scatter(buySignals.index, buySignals['Close'], marker="^", color="darkgreen", label="Buy")
+
+    plt.grid()
+    plt.legend()
+    plt.show()
+
   
 
 
