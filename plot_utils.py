@@ -32,6 +32,17 @@ def plot_portfolio(portfolio):
 
     plt.show()
 
-def plot_signals():
-    pass
+def plot_signals(df):
+    buy_signals = df[df.Position == "Buy"]
+    sell_signals = df[df.Position == "Sell"]
+
+    plt.figure(figsize=(12,8))
+    plt.xlabel("Time")
+    plt.ylabel("Price")
+    plt.title("Signals")
+    plt.scatter(buy_signals.index, buy_signals['Close'], marker="^", color="green", label="Buy")
+
+    plt.show()
+
+    
 

@@ -9,7 +9,7 @@ import pandas as pd
 from data import load_data
 from strategy import signal
 from backtest import backtest
-from plot_utils import plot_moving_averages, plot_portfolio
+from plot_utils import plot_moving_averages, plot_portfolio, plot_signals
 
 if __name__ == "__main__":
 
@@ -27,6 +27,8 @@ if __name__ == "__main__":
     # Generate trading signals using our strategy
     states = signal(prices, df['SMA'], df['LMA'])
 
+    df['Position'] = states
+
     # Run backtest to simulate trading and get portfolio values
     portfolio_val, total = backtest(prices, states)
     df['Portfolio Value'] = portfolio_val
@@ -35,4 +37,9 @@ if __name__ == "__main__":
     plot_moving_averages(df['SMA'], df['LMA'], df['Close'])
     # Plot portfolio value over time
     plot_portfolio(df['Portfolio Value'])
+
+    plot_signals(df)
+  
+
+
     
