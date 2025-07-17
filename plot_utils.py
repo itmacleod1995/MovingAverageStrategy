@@ -1,5 +1,7 @@
-#import dependencies
+# Import necessary libraries
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 
 # Function to plot moving averages and closing price
 def plot_moving_averages(sma, lma, price):
@@ -29,3 +31,18 @@ def plot_portfolio(portfolio):
     plt.grid()
 
     plt.show()
+
+# Function to plot buy and sell signals on the price chart
+def plot_signals(df):
+    # Filter buy and sell signals from the DataFrame
+    buy_signals = df[df.Position == "Buy"]
+    sell_signals = df[df.Position == "Sell"]
+
+    # Plot buy signals as green upward triangles
+    plt.scatter(buy_signals.index, buy_signals['Close'].to_numpy(), marker="^", color="green", label="Buy", s=100)
+    # Plot sell signals as red downward triangles
+    plt.scatter(sell_signals.index, sell_signals['Close'].to_numpy(), marker="v", color="red", label="Sell", s=100)
+
+
+    
+

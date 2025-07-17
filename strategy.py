@@ -23,12 +23,12 @@ def signal(prices, sma, lma):
         ):
             # Check for a bullish crossover: previous SMA was below or equal to LMA, now it's above
             if sma[i] > lma[i] and sma[i - 1] <= lma[i - 1] and sma_higher == False:
-                print("SMA crosses above LMA: SMA = {}, LMA = {}".format(sma[i], lma[i]))
+                #print("SMA crosses above LMA: SMA = {}, LMA = {}".format(sma[i], lma[i]))
                 sma_crosses_lma = True  # Mark that a crossover just occurred
                 sma_higher = True
             # Check for a bearish crossover: previous SMA was above or equal to LMA, now it's below
             elif sma[i] < lma[i] and sma[i - 1] >= lma[i - 1] and sma_higher:
-                print("SMA crosses below LMA: SMA = {}, LMA = {}".format(sma[i], lma[i]))
+                #print("SMA crosses below LMA: SMA = {}, LMA = {}".format(sma[i], lma[i]))
                 sma_crosses_lma = True
                 sma_higher = False
             else:
