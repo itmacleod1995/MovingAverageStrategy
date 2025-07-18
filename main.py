@@ -9,7 +9,6 @@ import pandas as pd
 from data import load_data
 from strategy import signal
 from backtest import backtest
-from plot_utils import plot_moving_averages, plot_portfolio, plot_signals
 
 if __name__ == "__main__":
 
@@ -40,6 +39,9 @@ if __name__ == "__main__":
     # Filter DataFrame for buy signals
     buySignals = df[df.Position == "Buy"]
 
+    #Filter DataFrame for sell signals
+    sellSignals = df[df.Position == "Sell"]
+
 
     """Plot"""
     # Set up the plot for price and moving averages
@@ -54,6 +56,9 @@ if __name__ == "__main__":
 
     # Overlay buy signals as green upward triangles
     plt.scatter(buySignals.index, buySignals['Close'], marker="^", color="darkgreen", label="Buy")
+
+    #Overlay sell signals as red x triangles
+    plt.scatter(sellSignals.index, sellSignals['Close'], marker="x", color="red", label="Sell")
 
     plt.grid()
     plt.legend()
