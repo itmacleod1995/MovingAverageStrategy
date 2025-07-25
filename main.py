@@ -11,7 +11,7 @@ from strategy import signal
 from backtest import backtest
 
 if __name__ == "__main__":
-
+    #Test fetch
     # Define the start and end dates for data download
     start = dt.datetime(2018, 1, 1)
     end = dt.datetime(2020, 12, 31)
