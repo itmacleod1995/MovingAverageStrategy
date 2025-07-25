@@ -13,15 +13,15 @@ from backtest import backtest
 if __name__ == "__main__":
 
     # Define the start and end dates for data download
-    start = dt.datetime(2010, 1, 1)
-    end = dt.datetime(2024, 1, 8)
+    start = dt.datetime(1990, 1, 1)
+    end = dt.datetime(2002, 1, 1)
     
     # Load historical price data using the data module
-    df = load_data(start, end, "USDZAR=X")
+    df = load_data(start, end, "AAPL")
 
     # Calculate short and long moving averages
-    df['SMA'] = df['Close'].rolling(50).mean()
-    df['LMA'] = df['Close'].rolling(200).mean()
+    df['SMA'] = df['Close'].rolling(20).mean()
+    df['LMA'] = df['Close'].rolling(50).mean()
 
     # Extract closing prices as a NumPy array
     prices = df['Close'].values
