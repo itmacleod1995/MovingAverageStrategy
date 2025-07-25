@@ -13,15 +13,15 @@ from backtest import backtest
 if __name__ == "__main__":
 
     # Define the start and end dates for data download
-    start = dt.datetime(2018, 1, 1)
-    end = dt.datetime(2020, 12, 31)
+    start = dt.datetime(2010, 1, 1)
+    end = dt.datetime(2024, 1, 8)
     
     # Load historical price data using the data module
-    df = load_data(start, end)
+    df = load_data(start, end, "USDZAR=X")
 
     # Calculate short and long moving averages
-    df['SMA'] = df['Close'].rolling(10).mean()
-    df['LMA'] = df['Close'].rolling(30).mean()
+    df['SMA'] = df['Close'].rolling(50).mean()
+    df['LMA'] = df['Close'].rolling(200).mean()
 
     # Extract closing prices as a NumPy array
     prices = df['Close'].values
@@ -42,10 +42,11 @@ if __name__ == "__main__":
     #Filter DataFrame for sell signals
     sellSignals = df[df.Position == "Sell"]
 
+    print(df)
 
     """Plot"""
     # Set up the plot for price and moving averages
-    plt.figure(figsize=(15, 10))
+    plt.figure(figsize=(12, 8))
     plt.xlabel("Time")
     plt.ylabel("Price")
     plt.plot(df['SMA'], label="SMA", color="Orange")
