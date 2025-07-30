@@ -25,8 +25,6 @@ if __name__ == "__main__":
 
     # Extract closing prices as a NumPy array and convert to 1-D array
     prices = df['Close'].values.ravel()
-
-    print(prices)
     
     # Generate trading signals using our strategy
     states = signal(prices, df['SMA'], df['LMA'])
