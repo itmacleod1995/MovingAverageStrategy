@@ -23,8 +23,10 @@ if __name__ == "__main__":
     df['SMA'] = df['Close'].rolling(10).mean()
     df['LMA'] = df['Close'].rolling(20).mean()
 
-    # Extract closing prices as a NumPy array
-    prices = df['Close'].values
+    # Extract closing prices as a NumPy array and convert to 1-D array
+    prices = df['Close'].values.ravel()
+
+    print(prices)
     
     # Generate trading signals using our strategy
     states = signal(prices, df['SMA'], df['LMA'])
