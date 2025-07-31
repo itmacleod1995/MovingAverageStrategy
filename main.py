@@ -42,8 +42,6 @@ if __name__ == "__main__":
     #Filter DataFrame for sell signals
     sellSignals = df[df.Position == "Sell"]
 
-    print(df)
-
     """Plot"""
     # Set up the plot for price and moving averages
     plt.figure(figsize=(12, 8))
