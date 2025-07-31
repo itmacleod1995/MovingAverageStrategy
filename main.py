@@ -13,18 +13,18 @@ from backtest import backtest
 if __name__ == "__main__":
     #Test fetch
     # Define the start and end dates for data download
-    start = dt.datetime(2018, 1, 1)
-    end = dt.datetime(2020, 12, 31)
+    start = dt.datetime(2020, 1, 1)
+    end = dt.datetime(2021, 1, 1)
     
     # Load historical price data using the data module
-    df = load_data(start, end)
+    df = load_data(start, end, "SPY")
 
     # Calculate short and long moving averages
     df['SMA'] = df['Close'].rolling(10).mean()
-    df['LMA'] = df['Close'].rolling(30).mean()
+    df['LMA'] = df['Close'].rolling(20).mean()
 
-    # Extract closing prices as a NumPy array
-    prices = df['Close'].values
+    # Extract closing prices as a NumPy array and convert to 1-D array
+    prices = df['Close'].values.ravel()
     
     # Generate trading signals using our strategy
     states = signal(prices, df['SMA'], df['LMA'])
@@ -42,10 +42,9 @@ if __name__ == "__main__":
     #Filter DataFrame for sell signals
     sellSignals = df[df.Position == "Sell"]
 
-
     """Plot"""
     # Set up the plot for price and moving averages
-    plt.figure(figsize=(15, 10))
+    plt.figure(figsize=(12, 8))
     plt.xlabel("Time")
     plt.ylabel("Price")
     plt.plot(df['SMA'], label="SMA", color="Orange")
