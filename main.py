@@ -26,6 +26,7 @@ if __name__ == "__main__":
     # Extract closing prices as a NumPy array and convert to 1-D array
     prices = df['Close'].values.ravel()
 
+    # Calculate Garman-Klass volatility for each day
     df['Volatility'] = garman_klass(df)
     
     # Generate trading signals using our strategy
