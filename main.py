@@ -37,7 +37,9 @@ if __name__ == "__main__":
 
     # Run backtest to simulate trading and get portfolio values
     portfolio_val, total = backtest(prices, states)
-    #df['Portfolio Value'] = portfolio_val
+    
+    # Add portfolio value column to dataframe
+    df['Portfolio Value'] = portfolio_val
 
     # Filter DataFrame for buy signals
     buySignals = df[df.Position == "Buy"]
