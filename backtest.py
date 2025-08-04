@@ -8,9 +8,11 @@ def backtest(prices, states):
         if states[i] == "Buy" and position == 0:
             # Buy if signal is Buy and not already in the market
             position = 1
-            num_of_shares = cash / prices[i]
+            num_of_shares = int(cash // prices[i])
+            cash = cash - (prices[i] * num_of_shares)
+            print("Number of shares = {}".format(num_of_shares))
             #print("Buy at {}".format(prices[i]))
-            cash = 0
+            #cash = 0
         elif states[i] == "Sell" and position == 1:
             # Sell if signal is Sell and currently in the market
             position = 0
