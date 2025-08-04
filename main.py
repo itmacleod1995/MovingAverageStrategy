@@ -30,7 +30,7 @@ if __name__ == "__main__":
     df['Volatility'] = garman_klass(df)
     
     # Generate trading signals using our strategy
-    states = signal(prices, df['SMA'], df['LMA'])
+    states = signal(prices, df['SMA'], df['LMA'], df['Volatility'])
 
     # Store the generated signals in the DataFrame
     df['Position'] = states
