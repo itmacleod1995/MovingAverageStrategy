@@ -19,15 +19,21 @@ if __name__ == "__main__":
     # Load historical price data using the data module
     df = load_data(start, end, "SPY")
 
+    # Round closing prices to 2 decimal places for cleaner display
+    df['Close'] = df['Close'].round(2)
+
     # Calculate short and long moving averages
-    df['SMA'] = df['Close'].rolling(10).mean()
-    df['LMA'] = df['Close'].rolling(20).mean()
+    # Round MA values to 2 decimal places for consistency
+    df['SMA'] = df['Close'].rolling(10).mean().round(2)
+    df['LMA'] = df['Close'].rolling(20).mean().round(2)
 
     # Extract closing prices as a NumPy array and convert to 1-D array
     prices = df['Close'].values.ravel()
 
     # Calculate Garman-Klass volatility for each day
     df['Volatility'] = garman_klass(df)
+    # Round volatility to 2 decimal places for readability
+    df['Volatility'] = df['Volatility'].round(2)
     
     # Generate trading signals using our strategy
     states = signal(prices, df['SMA'], df['LMA'], df['Volatility'])
@@ -40,12 +46,16 @@ if __name__ == "__main__":
     
     # Add portfolio value column to dataframe
     df['Portfolio Value'] = portfolio_val
+    # Round portfolio values to 2 decimal places for cleaner display
+    df['Portfolio Value'] = df['Portfolio Value'].round(2)
 
     # Filter DataFrame for buy signals
     buySignals = df[df.Position == "Buy"]
 
     #Filter DataFrame for sell signals
     sellSignals = df[df.Position == "Sell"]
+
+    print(df.head(60))
 
     """Plot"""
     # Set up the plot for price and moving averages
@@ -71,7 +81,14 @@ if __name__ == "__main__":
     """
 
     #Plot returns
-    
+    plt.figure(figsize=(12,8))
+    plt.xlabel("Time")
+    plt.ylabel("Price")
+    plt.plot(df['Portfolio Value'], label="Portfolio Value", color="Green")
+    plt.title("Portfolio Value Over Time")
+    plt.legend()
+    plt.grid()
+    plt.show()
 
   
 
