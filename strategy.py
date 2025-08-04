@@ -1,5 +1,5 @@
 # Function to generate trading signals based on moving average crossovers
-def signal(prices, sma, lma):
+def signal(prices, sma, lma, volatility):
     """
     Generate trading signals based on moving average crossover strategy.
     Strategy: Buy when Short MA crosses above Long MA, Sell when it crosses below.
@@ -37,7 +37,7 @@ def signal(prices, sma, lma):
             sma_crosses_lma = False  # Not enough data for crossover check
 
         # Detect bullish crossover: SMA crosses above LMA
-        if sma_crosses_lma and sma_higher:
+        if (sma_crosses_lma and sma_higher) and volatility[i] < .01:
             states.append("Buy")
         # Detect bearish crossover: SMA crosses below LMA
         elif sma_crosses_lma and sma_higher == False:

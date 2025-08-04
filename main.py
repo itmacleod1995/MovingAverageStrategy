@@ -9,9 +9,9 @@ import pandas as pd
 from data import load_data
 from strategy import signal
 from backtest import backtest
+from indicators import garman_klass
 
 if __name__ == "__main__":
-    #Test fetch
     # Define the start and end dates for data download
     start = dt.datetime(2020, 1, 1)
     end = dt.datetime(2021, 1, 1)
@@ -25,6 +25,9 @@ if __name__ == "__main__":
 
     # Extract closing prices as a NumPy array and convert to 1-D array
     prices = df['Close'].values.ravel()
+
+    # Calculate Garman-Klass volatility for each day
+    df['Volatility'] = garman_klass(df)
     
     # Generate trading signals using our strategy
     states = signal(prices, df['SMA'], df['LMA'])
@@ -34,6 +37,8 @@ if __name__ == "__main__":
 
     # Run backtest to simulate trading and get portfolio values
     portfolio_val, total = backtest(prices, states)
+    
+    # Add portfolio value column to dataframe
     df['Portfolio Value'] = portfolio_val
 
     # Filter DataFrame for buy signals
