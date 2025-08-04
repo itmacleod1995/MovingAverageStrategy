@@ -37,6 +37,7 @@ def signal(prices, sma, lma, volatility):
             sma_crosses_lma = False  # Not enough data for crossover check
 
         # Detect bullish crossover: SMA crosses above LMA
+        # Only buy when volatility is very low (< 1%) for conservative trading
         if (sma_crosses_lma and sma_higher) and volatility[i] < .01:
             states.append("Buy")
         # Detect bearish crossover: SMA crosses below LMA
