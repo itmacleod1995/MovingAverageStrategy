@@ -49,6 +49,7 @@ if __name__ == "__main__":
 
     """Plot"""
     # Set up the plot for price and moving averages
+    """
     plt.figure(figsize=(12, 8))
     plt.xlabel("Time")
     plt.ylabel("Price")
@@ -67,6 +68,10 @@ if __name__ == "__main__":
     plt.grid()
     plt.legend()
     plt.show()
+    """
+
+    #Plot returns
+    
 
   
 
