@@ -4,12 +4,12 @@ import matplotlib.pyplot as plt
 import pandas_datareader.data as pdr
 from pandas_datareader._utils import RemoteDataError
 import datetime as dt
-import yfinance as yf
 import pandas as pd
 from data import load_data
 from strategy import signal
 from backtest import backtest
 from indicators import garman_klass
+from conn import connect
 
 if __name__ == "__main__":
     # Define the start and end dates for data download
@@ -55,7 +55,10 @@ if __name__ == "__main__":
     #Filter DataFrame for sell signals
     sellSignals = df[df.Position == "Sell"]
 
-    #print(df.tail(60))
+    acct = connect()
+
+    # Check how much money we can use to open new positions.
+    print('${} is available as buying power.'.format(acct.buying_power))
 
     """Plot"""
     # Set up the plot for price and moving averages
@@ -80,6 +83,7 @@ if __name__ == "__main__":
     plt.show()
     """
 
+    """
     #Plot returns
     plt.figure(figsize=(12,8))
     plt.xlabel("Time")
@@ -89,6 +93,7 @@ if __name__ == "__main__":
     plt.legend()
     plt.grid()
     plt.show()
+    """
 
 
   
