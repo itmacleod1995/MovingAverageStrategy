@@ -8,7 +8,7 @@ def connect():
     key = os.getenv("key")
     secret = os.getenv("API_SECRET")
 
-    trading_client = TradingClient(key, secret)
+    trading_client = TradingClient(key, secret, paper=True)
     return trading_client
 
 
