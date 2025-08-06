@@ -2,15 +2,13 @@
 from alpaca.data.historical import StockHistoricalDataClient
 from alpaca.data.requests import StockBarsRequest
 from alpaca.data.timeframe import TimeFrame
-from dotenv import load_dotenv
-import os
+import config
 import datetime as dt
 
 
 def load_data(start, end, symbol="SPY"):
-    load_dotenv()
-    key = os.getenv("key")
-    secret = os.getenv("API_SECRET")
+    key = config.key
+    secret = config.secret
     client = StockHistoricalDataClient(key, secret)
 
     request = StockBarsRequest(

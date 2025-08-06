@@ -1,12 +1,11 @@
 import os
 from alpaca.trading.client import TradingClient
-from dotenv import load_dotenv
+import config
 
 def connect():
-    load_dotenv()
 
-    key = os.getenv("key")
-    secret = os.getenv("API_SECRET")
+    key = config.key
+    secret = config.secret
 
     trading_client = TradingClient(key, secret, paper=True)
     return trading_client.get_account()
