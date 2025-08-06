@@ -1,0 +1,8 @@
+alpaca==1.0.0
+matplotlib==3.7.1
+numpy==1.24.3
+pandas==1.5.3
+pandas==2.0.2
+pandas_datareader==0.10.0
+python-dotenv==1.1.1
+yfinance==0.1.87
