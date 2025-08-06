@@ -20,7 +20,6 @@ if __name__ == "__main__":
     acct = connect()
     # Check how much money we can use to open new positions.
     print('${} is available as buying power.'.format(acct.buying_power))
-    exit()
     
     # Load historical price data using the data module
     df = load_data(start, end, "SPY")
