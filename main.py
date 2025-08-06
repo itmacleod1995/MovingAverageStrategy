@@ -13,8 +13,8 @@ from conn import connect
 
 if __name__ == "__main__":
     # Define the start and end dates for data download
-    start = dt.datetime(2020, 1, 1)
-    end = dt.datetime(2021, 1, 1)
+    start = dt.datetime(2020, 11, 2)
+    end = dt.datetime(2020, 11, 6)
 
     #connect to alpaca api
     acct = connect()
@@ -22,8 +22,9 @@ if __name__ == "__main__":
     print('${} is available as buying power.'.format(acct.buying_power))
     
     # Load historical price data using the data module
-    df = load_data(start, end, "SPY")
-
+    bars = load_data(start, end, "SPY")
+    print(type(bars))
+    exit()
     # Round closing prices to 2 decimal places for cleaner display
     df['Close'] = df['Close'].round(2)
 

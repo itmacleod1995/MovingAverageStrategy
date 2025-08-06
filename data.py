@@ -1,25 +1,26 @@
 #import dependencies
-import numpy as np
-import pandas as pd
+from alpaca.data.historical import StockHistoricalDataClient
+from alpaca.data.requests import StockBarsRequest
+from alpaca.data.timeframe import TimeFrame
+from dotenv import load_dotenv
+import os
 import datetime as dt
-import pandas_datareader.data as pdr
-import yfinance as yf
+
 
 def load_data(start, end, symbol="SPY"):
-    """
-    Download historical price data for a given symbol from Yahoo Finance.
+    load_dotenv()
+    key = os.getenv("key")
+    secret = os.getenv("API_SECRET")
+    client = StockHistoricalDataClient(key, secret)
 
-    Parameters:
-        start (datetime): The start date for the data.
-        end (datetime): The end date for the data.
-        symbol (str): The ticker symbol to download (default: 'SPY').
+    request = StockBarsRequest(
+        symbol_or_symbols=[symbol],
+        timeframe = TimeFrame.Day,
+        start = start,
+        end = end
+    )
 
-    Returns:
-        pd.DataFrame: DataFrame containing the historical price data.
-    """
-    df = yf.download(symbol, start, end)
-    if df is None or df.empty:
-        print("Error loading data")
-        exit()
-    return df
+    bars = client.get_stock_bars(request)
+
+    return bars
 
