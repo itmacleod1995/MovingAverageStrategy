@@ -22,7 +22,7 @@ if __name__ == "__main__":
     
     #Grab historical data via API
     data = load_data(acct, start, end)
-    print(type(data))
+    print(data.head())
     exit()
     # Round closing prices to 2 decimal places for cleaner display
     df['Close'] = df['Close'].round(2)
