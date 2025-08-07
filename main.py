@@ -13,12 +13,16 @@ from conn import connect
 
 if __name__ == "__main__":
     # Define the start and end dates for data download
-    start = dt.datetime(2020, 11, 2)
-    end = dt.datetime(2020, 11, 6)
+    start = "2024-01-01"
+    end = "2024-12-30"
 
     #connect to alpaca api
     acct = connect()
     print(acct.get_account().equity)
+    
+    #Grab historical data via API
+    data = load_data(acct, start, end)
+    print(type(data))
     exit()
     # Round closing prices to 2 decimal places for cleaner display
     df['Close'] = df['Close'].round(2)
