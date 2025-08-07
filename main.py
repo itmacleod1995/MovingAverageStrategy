@@ -18,12 +18,7 @@ if __name__ == "__main__":
 
     #connect to alpaca api
     acct = connect()
-    # Check how much money we can use to open new positions.
-    print('${} is available as buying power.'.format(acct.buying_power))
-    
-    # Load historical price data using the data module
-    bars = load_data(start, end, "SPY")
-    print(type(bars))
+    print(acct.get_account().equity)
     exit()
     # Round closing prices to 2 decimal places for cleaner display
     df['Close'] = df['Close'].round(2)

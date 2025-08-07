@@ -1,13 +1,19 @@
 import os
-from alpaca.trading.client import TradingClient
+import alpaca_trade_api as tradeapi
 import config
 
+"""
+Establishes connection with api
+"""
 def connect():
-
+    #load config variables from .env
     key = config.key
     secret = config.secret
+    url = config.BASE_URL
 
-    trading_client = TradingClient(key, secret, paper=True)
-    return trading_client.get_account()
+    #establish connection
+    conn = tradeapi.REST(key, secret, url, api_version="v2")
+    return conn
+
 
 
