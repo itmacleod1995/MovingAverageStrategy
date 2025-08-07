@@ -21,24 +21,29 @@ if __name__ == "__main__":
     print(acct.get_account().equity)
     
     #Grab historical data via API
-    data = load_data(acct, start, end)
-    print(data.head())
-    exit()
+    df = load_data(acct, start, end)
+
+    #drop unnecessary columns
+    df = df.drop(['trade_count', 'volume', 'vwap'], axis=1)
+
     # Round closing prices to 2 decimal places for cleaner display
-    df['Close'] = df['Close'].round(2)
+    df['close'] = df['close'].round(2)
 
     # Calculate short and long moving averages
     # Round MA values to 2 decimal places for consistency
-    df['SMA'] = df['Close'].rolling(10).mean().round(2)
-    df['LMA'] = df['Close'].rolling(20).mean().round(2)
+    df['SMA'] = df['close'].rolling(10).mean().round(2)
+    df['LMA'] = df['close'].rolling(20).mean().round(2)
 
-    # Extract closing prices as a NumPy array and convert to 1-D array
-    prices = df['Close'].values.ravel()
+    # Extract closing prices as a NumPy array
+    prices = df['close'].values
 
     # Calculate Garman-Klass volatility for each day
-    df['Volatility'] = garman_klass(df)
+    df['volatility'] = garman_klass(df)
     # Round volatility to 2 decimal places for readability
-    df['Volatility'] = df['Volatility'].round(2)
+    df['volatility'] = df['volatility'].round(2)
+
+    print(df.head(30))
+    exit()
     
     # Generate trading signals using our strategy
     states = signal(prices, df['SMA'], df['LMA'], df['Volatility'])
