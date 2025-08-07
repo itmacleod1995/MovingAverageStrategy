@@ -20,10 +20,10 @@ def garman_klass(df):
     
     # Extract OHLC price data and flatten to 1D arrays
     # .values converts to numpy array, .ravel() flattens to 1D
-    close_price = df['Close'].values.ravel()
-    open_price = df['Open'].values.ravel()
-    high = df['High'].values.ravel()
-    low = df['Low'].values.ravel()
+    close_price = df['close'].values
+    open_price = df['open'].values
+    high = df['high'].values
+    low = df['low'].values
 
     # Garman-Klass volatility formula:
     # σ = √(0.5 * (ln(H/L))² - (2*ln(2) - 1) * (ln(C/O))²)

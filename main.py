@@ -13,32 +13,37 @@ from conn import connect
 
 if __name__ == "__main__":
     # Define the start and end dates for data download
-    start = dt.datetime(2020, 1, 1)
-    end = dt.datetime(2021, 1, 1)
+    start = "2024-01-01"
+    end = "2024-12-30"
 
     #connect to alpaca api
     acct = connect()
-    # Check how much money we can use to open new positions.
-    print('${} is available as buying power.'.format(acct.buying_power))
+    print(acct.get_account().equity)
     
-    # Load historical price data using the data module
-    df = load_data(start, end, "SPY")
+    #Grab historical data via API
+    df = load_data(acct, start, end)
+
+    #drop unnecessary columns
+    df = df.drop(['trade_count', 'volume', 'vwap'], axis=1)
 
     # Round closing prices to 2 decimal places for cleaner display
-    df['Close'] = df['Close'].round(2)
+    df['close'] = df['close'].round(2)
 
     # Calculate short and long moving averages
     # Round MA values to 2 decimal places for consistency
-    df['SMA'] = df['Close'].rolling(10).mean().round(2)
-    df['LMA'] = df['Close'].rolling(20).mean().round(2)
+    df['SMA'] = df['close'].rolling(10).mean().round(2)
+    df['LMA'] = df['close'].rolling(20).mean().round(2)
 
-    # Extract closing prices as a NumPy array and convert to 1-D array
-    prices = df['Close'].values.ravel()
+    # Extract closing prices as a NumPy array
+    prices = df['close'].values
 
     # Calculate Garman-Klass volatility for each day
-    df['Volatility'] = garman_klass(df)
+    df['volatility'] = garman_klass(df)
     # Round volatility to 2 decimal places for readability
-    df['Volatility'] = df['Volatility'].round(2)
+    df['volatility'] = df['volatility'].round(2)
+
+    print(df.head(30))
+    exit()
     
     # Generate trading signals using our strategy
     states = signal(prices, df['SMA'], df['LMA'], df['Volatility'])
