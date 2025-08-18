@@ -17,12 +17,12 @@ if __name__ == "__main__":
     pd.set_option("display.max_columns", None)
 
     # Define the start and end dates for data download
-    start = "2024-01-01"
-    end = "2024-12-30"
+    start = "2020-01-01"
+    end = "2020-12-30"
 
     #connect to alpaca api
     acct = connect()
-    print(acct.get_account().equity)
+    #print(acct.get_account().equity)
     
     #Grab historical data via API
     df = load_data(acct, start, end)
@@ -65,6 +65,9 @@ if __name__ == "__main__":
 
     #Filter DataFrame for sell signals
     sellSignals = df[df.Position == "Sell"]
+
+    #print(df[["close", "SMA", "LMA", "Position", "Portfolio Value"]])
+    print("Starting equity = {}, Ending equity = {}".format(10000, np.round(total, 2)))
 
     """Plot"""
     # Set up the plot for price and moving averages
