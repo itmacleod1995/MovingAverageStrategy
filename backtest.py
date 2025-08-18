@@ -17,7 +17,7 @@ def backtest(prices, states):
             # Sell if signal is Sell and currently in the market
             position = 0
             #print("Sell at {}".format(prices[i]))
-            cash = num_of_shares * prices[i]
+            cash = cash + (num_of_shares * prices[i])
             num_of_shares = 0
         
         # Calculate current portfolio value (cash + value of held shares)

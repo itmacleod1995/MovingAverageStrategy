@@ -12,6 +12,10 @@ from indicators import garman_klass
 from conn import connect
 
 if __name__ == "__main__":
+
+    pd.set_option("display.max_rows", None)
+    pd.set_option("display.max_columns", None)
+
     # Define the start and end dates for data download
     start = "2024-01-01"
     end = "2024-12-30"
@@ -41,12 +45,9 @@ if __name__ == "__main__":
     df['volatility'] = garman_klass(df)
     # Round volatility to 2 decimal places for readability
     df['volatility'] = df['volatility'].round(2)
-
-    print(df.head(30))
-    exit()
     
     # Generate trading signals using our strategy
-    states = signal(prices, df['SMA'], df['LMA'], df['Volatility'])
+    states = signal(prices, df['SMA'], df['LMA'], df['volatility'])
 
     # Store the generated signals in the DataFrame
     df['Position'] = states
