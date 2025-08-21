@@ -12,13 +12,17 @@ from indicators import garman_klass
 from conn import connect
 
 if __name__ == "__main__":
+
+    pd.set_option("display.max_rows", None)
+    pd.set_option("display.max_columns", None)
+
     # Define the start and end dates for data download
-    start = "2024-01-01"
-    end = "2024-12-30"
+    start = "2020-01-01"
+    end = "2020-12-30"
 
     #connect to alpaca api
     acct = connect()
-    print(acct.get_account().equity)
+    #print(acct.get_account().equity)
     
     #Grab historical data via API
     df = load_data(acct, start, end)
@@ -41,12 +45,9 @@ if __name__ == "__main__":
     df['volatility'] = garman_klass(df)
     # Round volatility to 2 decimal places for readability
     df['volatility'] = df['volatility'].round(2)
-
-    print(df.head(30))
-    exit()
     
     # Generate trading signals using our strategy
-    states = signal(prices, df['SMA'], df['LMA'], df['Volatility'])
+    states = signal(prices, df['SMA'], df['LMA'], df['volatility'])
 
     # Store the generated signals in the DataFrame
     df['Position'] = states
@@ -65,30 +66,33 @@ if __name__ == "__main__":
     #Filter DataFrame for sell signals
     sellSignals = df[df.Position == "Sell"]
 
+    #print(df[["close", "SMA", "LMA", "Position", "Portfolio Value"]])
+    print("Starting equity = {}, Ending equity = {}".format(10000, np.round(total, 2)))
+
+    print(df[df.Position == "Hold"][["SMA", "LMA", "Position", "volatility"]])
+
     """Plot"""
     # Set up the plot for price and moving averages
-    """
+    
     plt.figure(figsize=(12, 8))
     plt.xlabel("Time")
     plt.ylabel("Price")
     plt.plot(df['SMA'], label="SMA", color="Orange")
     plt.plot(df['LMA'], label="LMA", color="Purple")
-    plt.plot(df['Close'], label="Price", color="LightBlue")
+    plt.plot(df['close'], label="Price", color="LightBlue")
 
     plt.title("Moving Average Crossover Strategy")
 
     # Overlay buy signals as green upward triangles
-    plt.scatter(buySignals.index, buySignals['Close'], marker="^", color="darkgreen", label="Buy")
+    plt.scatter(buySignals.index, buySignals['close'], marker="^", color="darkgreen", label="Buy")
 
     #Overlay sell signals as red x triangles
-    plt.scatter(sellSignals.index, sellSignals['Close'], marker="x", color="red", label="Sell")
+    plt.scatter(sellSignals.index, sellSignals['close'], marker="x", color="red", label="Sell")
 
     plt.grid()
     plt.legend()
     plt.show()
-    """
-
-    """
+    
     #Plot returns
     plt.figure(figsize=(12,8))
     plt.xlabel("Time")
@@ -98,7 +102,7 @@ if __name__ == "__main__":
     plt.legend()
     plt.grid()
     plt.show()
-    """
+    
 
 
   

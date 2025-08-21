@@ -18,8 +18,8 @@ def garman_klass(df):
         np.array: Volatility estimates (standard deviation, not variance)
     """
     
-    # Extract OHLC price data and flatten to 1D arrays
-    # .values converts to numpy array, .ravel() flattens to 1D
+    # Extract OHLC price data
+    # .values converts to numpy array
     close_price = df['close'].values
     open_price = df['open'].values
     high = df['high'].values
