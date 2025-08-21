@@ -70,7 +70,6 @@ if __name__ == "__main__":
     print("Starting equity = {}, Ending equity = {}".format(10000, np.round(total, 2)))
 
     print(df[df.Position == "Hold"][["SMA", "LMA", "Position", "volatility"]])
-    #exit()
 
     """Plot"""
     # Set up the plot for price and moving averages
