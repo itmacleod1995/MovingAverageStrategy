@@ -69,30 +69,31 @@ if __name__ == "__main__":
     #print(df[["close", "SMA", "LMA", "Position", "Portfolio Value"]])
     print("Starting equity = {}, Ending equity = {}".format(10000, np.round(total, 2)))
 
+    print(df[df.Position == "Hold"][["SMA", "LMA", "Position", "volatility"]])
+    #exit()
+
     """Plot"""
     # Set up the plot for price and moving averages
-    """
+    
     plt.figure(figsize=(12, 8))
     plt.xlabel("Time")
     plt.ylabel("Price")
     plt.plot(df['SMA'], label="SMA", color="Orange")
     plt.plot(df['LMA'], label="LMA", color="Purple")
-    plt.plot(df['Close'], label="Price", color="LightBlue")
+    plt.plot(df['close'], label="Price", color="LightBlue")
 
     plt.title("Moving Average Crossover Strategy")
 
     # Overlay buy signals as green upward triangles
-    plt.scatter(buySignals.index, buySignals['Close'], marker="^", color="darkgreen", label="Buy")
+    plt.scatter(buySignals.index, buySignals['close'], marker="^", color="darkgreen", label="Buy")
 
     #Overlay sell signals as red x triangles
-    plt.scatter(sellSignals.index, sellSignals['Close'], marker="x", color="red", label="Sell")
+    plt.scatter(sellSignals.index, sellSignals['close'], marker="x", color="red", label="Sell")
 
     plt.grid()
     plt.legend()
     plt.show()
-    """
-
-    """
+    
     #Plot returns
     plt.figure(figsize=(12,8))
     plt.xlabel("Time")
@@ -102,7 +103,7 @@ if __name__ == "__main__":
     plt.legend()
     plt.grid()
     plt.show()
-    """
+    
 
 
   
